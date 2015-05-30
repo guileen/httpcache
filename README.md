@@ -8,13 +8,9 @@
 [![GoDoc](https://godoc.org/github.com/lox/httpcache?status.svg)](https://godoc.org/github.com/lox/httpcache)
 
 ## Extention
-
-* `verify-ignore-params`  app layer.
-* `conditional-get` app layer.
-
-* `x-force-cache`  support cache for POST
-* `x-ignore-params`  ignore query params for cache
-* `if-match` `if-modify-since` support conditional get. Remove the conditional header before pass to upstream, handle conditional itself.
+- `x-force-cache`  support cache for POST
+- `x-ignore-params`  ignore query params for cache
+- `if-match` `if-modify-since` support conditional get. Remove the conditional header before pass to upstream, handle conditional itself.
 
 ```
 proxy := &httputil.ReverseProxy{
