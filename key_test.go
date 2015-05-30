@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/lox/httpcache"
+	"../httpcache"
 	"github.com/stretchr/testify/assert"
 )
 

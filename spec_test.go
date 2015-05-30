@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lox/httpcache"
-	"github.com/lox/httpcache/httplog"
+	"../httpcache"
+	"./httplog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lox/httpcache"
+	"../httpcache"
 	"github.com/stretchr/testify/require"
 )
 
