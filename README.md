@@ -7,6 +7,40 @@
 
 [![GoDoc](https://godoc.org/github.com/lox/httpcache?status.svg)](https://godoc.org/github.com/lox/httpcache)
 
+## Extention
+
+* `verify-ignore-params`  app layer.
+* `conditional-get` app layer.
+
+* `x-force-cache`  support cache for POST
+* `x-ignore-params`  ignore query params for cache
+* `if-match` `if-modify-since` support conditional get. Remove the conditional header before pass to upstream, handle conditional itself.
+
+```
+proxy := &httputil.ReverseProxy{
+    Director: func(r *http.Request) {
+    },
+}
+
+handler := httpcache.NewHandler(httpcache.NewMemoryCache(), proxy)
+handler.Shared = true
+
+log.Printf("proxy listening on http://%s", listen)
+log.Fatal(http.ListenAndServe(listen, func(rw, req) {
+    if match(req) {
+        req.Headers()['Cache-Control'] = "....max-age..."
+        req.Headers()['x-force-cache'] = "1"
+        req.Headers()['x-ignore-params'] = "key,mobileOS,lat,lng"
+    }
+    handler.ServeHTTP(rw, req)
+    if rw.Headers()["Hit"] {
+        "record hit"
+    } else {
+        "record miss"
+    }
+})
+```
+
 ## Example
 
 This example if from the included CLI, it runs a caching proxy on http://localhost:8080.
