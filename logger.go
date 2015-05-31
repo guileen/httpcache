@@ -7,7 +7,7 @@ const (
 	ansiReset = "\x1b[0m"
 )
 
-var DebugLogging = false
+var DebugLogging = true
 
 func debugf(format string, args ...interface{}) {
 	if DebugLogging {

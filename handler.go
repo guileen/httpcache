@@ -274,7 +274,14 @@ func correctedAge(h http.Header, reqTime, respTime time.Time) (time.Duration, er
 }
 
 func (h *Handler) isCacheable(res *Resource, r *cacheRequest) bool {
+	if r.Header.Get("If-Range") != "" {
+		return false
+	}
+	if r.Header.Get("X-Cache-Key") != "" {
+		return true
+	}
 	cc, err := res.cacheControl()
+	debugf("cc is: %v, err: %v", cc, err)
 	if err != nil {
 		errorf("Error parsing cache-control: %s", err.Error())
 		return false
@@ -396,6 +403,7 @@ func (h *Handler) storeResource(res *Resource, r *cacheRequest) {
 // lookupResource finds the best matching Resource for the
 // request, or nil and ErrNotFoundInCache if none is found
 func (h *Handler) lookup(req *cacheRequest) (*Resource, error) {
+	debugf("get cache with key:%s", req.Key.String())
 	res, err := h.cache.Retrieve(req.Key.String())
 
 	// HEAD requests can possibly be served from GET
@@ -460,13 +468,22 @@ func (r *cacheRequest) isStateChanging() bool {
 }
 
 func (r *cacheRequest) isCacheable() bool {
+	if r.Header.Get("If-Range") != "" {
+		return false
+	}
+
+	if r.Header.Get("X-Cache-Key") != "" {
+		r.Header.Del("If-Match")
+		r.Header.Del("If-Unmodified-Since")
+		return true
+	}
+
 	if !(r.Method == "GET" || r.Method == "HEAD") {
 		return false
 	}
 
 	if r.Header.Get("If-Match") != "" ||
-		r.Header.Get("If-Unmodified-Since") != "" ||
-		r.Header.Get("If-Range") != "" {
+		r.Header.Get("If-Unmodified-Since") != "" {
 		return false
 	}
 

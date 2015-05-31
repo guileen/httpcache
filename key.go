@@ -64,6 +64,9 @@ func (k Key) Vary(varyHeader string, r *http.Request) Key {
 }
 
 func (k Key) String() string {
+	if k.header.Get("X-Cache-Key") != "" {
+		return k.header.Get("X-Cache-Key")
+	}
 	URL := strings.ToLower(canonicalURL(&k.u).String())
 	b := &bytes.Buffer{}
 	b.WriteString(fmt.Sprintf("%s:%s", k.method, URL))

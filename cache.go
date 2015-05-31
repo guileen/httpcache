@@ -141,7 +141,9 @@ func (c *Cache) storeHeader(code int, h http.Header, key string) error {
 
 // Retrieve returns a cached Resource for the given key
 func (c *Cache) Retrieve(key string) (*Resource, error) {
-	f, err := c.fs.Open(bodyPrefix + formatPrefix + hashKey(key))
+	pathForKey := bodyPrefix + formatPrefix + hashKey(key)
+	debugf("Path for key: %s", pathForKey)
+	f, err := c.fs.Open(pathForKey)
 	if err != nil {
 		if vfs.IsNotExist(err) {
 			return nil, ErrNotFoundInCache
